@@ -126,7 +126,7 @@ class AbstractAdapter {
     return this.is_federated;
   }
 
-  processItems(items, level) {
+  async processItems(items, level) {
 
     if (isNaN(level))
       level = 0;
@@ -161,11 +161,12 @@ class AbstractAdapter {
       })
     }
 
-    items.map((item) => {
+    for (let item of items) {
+      // items.map(async (item) => {
+      console.log('sleeping 1000')
+      await sleep(1000)
 
-      this.preProcessItem(item).then(async (item) => {
-        console.log('sleeping 1000')
-        await sleep(1000)
+      this.preProcessItem(item).then((item) => {
         this.tasks_count--;
 
         item.tsk = this.getCurrentContext().transaction_key; // transaction key for items that can be then cleaned up
@@ -212,11 +213,11 @@ class AbstractAdapter {
                   logger.debug(`Switching page to ${this.page}`);
                   let exitCallback = this.onDone;
                   this.getSourceData(context)
-                    .then(this.processItems.bind(this))
-                    .catch((err) => {
-                      logger.error(err);
-                      exitCallback()
-                    });
+                      .then(this.processItems.bind(this))
+                      .catch((err) => {
+                        logger.error(err);
+                        exitCallback()
+                      });
                 }
               }
             }
@@ -228,7 +229,8 @@ class AbstractAdapter {
         logger.error(reason);
         return this.onDone(this);
       });
-    })
+      // })
+    }
   }
 }
 
