@@ -161,11 +161,8 @@ class AbstractAdapter {
       })
     }
 
-    for (let item of items) {
-      // items.map(async (item) => {
-      console.log('sleeping 1000')
-      await sleep(1000)
-
+    items.map(async (item) => {
+      console.log('Dalaying script: ', await sleep(20)) //Having issues with lost packets on my GKE kubernetes cluster, when this script fires 50+ requests instantly. They never reach the ES pod. Without any error
       this.preProcessItem(item).then((item) => {
         this.tasks_count--;
 
@@ -229,8 +226,7 @@ class AbstractAdapter {
         logger.error(reason);
         return this.onDone(this);
       });
-      // })
-    }
+      })
   }
 }
 
