@@ -153,10 +153,19 @@ class AbstractAdapter {
     if (this.total_count)
       logger.info(`Total count is: ${this.total_count}`)
 
+    let sleep = function (ms){
+      return new Promise(resolve=>{
+        setTimeout(()=>{
+          resolve('slept for '+ms+'ms')
+        },ms)
+      })
+    }
+
     items.map((item) => {
 
-      this.preProcessItem(item).then((item) => {
-
+      this.preProcessItem(item).then(async (item) => {
+        console.log('sleeping 1000')
+        await sleep(1000)
         this.tasks_count--;
 
         item.tsk = this.getCurrentContext().transaction_key; // transaction key for items that can be then cleaned up
